@@ -23,7 +23,7 @@ Input data should be an edge list without header:
 2. Import the dataset to a data frame you want to use.
 3. Calculate the TI and WI indeces with 3 steps.
 ```
-source("TI_WI_calculator.R")
+source("calculate_TI_WI.R")
 df = read.table("abcd.txt")
 result = calculate_TI_WI(df, 3)
 ```

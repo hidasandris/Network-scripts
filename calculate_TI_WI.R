@@ -9,6 +9,10 @@ calculate_TI_WI <- function(input_data, steps, symmetrization_method="sum") {
   
   if (!dim(input_data)[2] %in% c(2, 3)) stop("Wrong input format")
   
+  if (is_character(input_data[1,1])) {
+    names(input_data) = c("V1", "V2", "V3")
+  }
+  
   if (any(duplicated(input_data[,1:2]))) {
     input_data = aggregate(V3 ~ V1 + V2, data = input_data, FUN = sum)
     warning("Multilink edges were summed.")
@@ -16,7 +20,7 @@ calculate_TI_WI <- function(input_data, steps, symmetrization_method="sum") {
   
   nodeID <-
     levels(factor(c(
-      as.character(input_data[, 1]), as.character(input_data[, 2])
+      unlist(input_data[, 1]), unlist(input_data[, 2])
     )))
   numnode <- length(nodeID)
   mx <- matrix(rep(0, numnode ^ 2), nrow = numnode, ncol = numnode)
@@ -45,11 +49,18 @@ calculate_TI_WI <- function(input_data, steps, symmetrization_method="sum") {
     TI_index[i] <- sum(SI[i,]) / numstep
   resu <- data.frame(nodeID, TI_index)
   
+  
   if (dim(input_data)[2] == 2) {
     warning("No weights, computing only TI index.")
     return(resu)
-  } 
+  }
+  
   if (!is.numeric(input_data[,3])) stop("Weights are not of numeric type")
+  
+  if (any(input_data[,3] < 0)) {
+    input_data[,3] = abs(input_data[,3])
+    warning("Negative values detected. Absolute values taken.")
+  }
   
   mxw <- matrix(rep(0, numnode ^ 2), nrow = numnode, ncol = numnode)
   rownames(mxw) <- nodeID

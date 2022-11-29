@@ -1,6 +1,6 @@
 Compactness <- function(g) {
-        gra.geo <- distances(g) ## get geodesics
-        gra.rdist <- 1/gra.geo  ## get reciprocal of geodesics
+        gra.geo <- distances(g, algorithm = 'dijkstra') ## get geodesics
+        gra.rdist <- 1 / gra.geo  ## get reciprocal of geodesics
         diag(gra.rdist) <- NA   ## assign NA to diagonal
         gra.rdist[gra.rdist == Inf] <- 0 ## replace infinity with 0
           # Compactness = mean of reciprocal distances
